@@ -1,21 +1,42 @@
 const factEl = document.getElementById("fact");
 const btnFact = document.getElementById("btnFact");
 
+// Lista de animes disponibles
+const animes = [
+    "naruto",
+    "bleach",
+    "one_piece",
+    "attack_on_titan",
+    "dragon_ball",
+    "death_note"
+];
+
 async function getAnimeFact() {
     factEl.textContent = "Cargando...";
+
     try {
-        const res = await fetch("https://chandan-02.github.io/anime-facts-rest-api/");
+        // Elegir anime aleatorio
+        const anime = animes[Math.floor(Math.random() * animes.length)];
+
+        const res = await fetch(
+            `https://anime-facts-rest-api.herokuapp.com/api/v1/${anime}`
+        );
+
+        if (!res.ok) {
+            throw new Error("Error en la API");
+        }
+
         const data = await res.json();
 
-        const randomFact = data.data[
-            Math.floor(Math.random() * data.data.length)
-        ].fact;
+        // Elegir fact aleatorio
+        const randomFact =
+            data.data[Math.floor(Math.random() * data.data.length)].fact;
 
         factEl.textContent = randomFact;
 
-    } catch (err) {
+    } catch (error) {
         factEl.textContent = "No se pudo cargar el dato 😢";
-        console.error(err);
+        console.error(error);
     }
 }
 
